@@ -1,1 +1,1 @@
-# amazon_scraping_bestsellers_categories
+![Resim](images/pic.png)
