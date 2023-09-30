@@ -18,11 +18,11 @@ class AmazonScraper:
             r = rq.get(url)
             if r.status_code == 200:
                 soup = bs(r.content, "lxml")
-                ürünler = soup.find_all("div", attrs={"id": "gridItemRoot"})
+                urunler = soup.find_all("div", attrs={"id": "gridItemRoot"})
 
-                for ürün in ürünler:
-                    link = self.get_product_link(ürün)
-                    self.urunler_dict[link] = self.get_product_data(ürün, link)
+                for urun in urunler:
+                    link = self.get_product_link(urun)
+                    self.urunler_dict[link] = self.get_product_data(urun, link)
 
                 time.sleep(self.retry_delay)
                 break
@@ -30,38 +30,38 @@ class AmazonScraper:
                 retry_count += 1
                 print(f"Sayfa yüklenemedi ({retry_count}. deneme). Bekleniyor...")
 
-    def get_product_link(self, ürün):
-        link_etiketi = ürün.a
+    def get_product_link(self, urun):
+        link_etiketi = urun.a
         if link_etiketi:
             url = "https://www.amazon.com.tr" + link_etiketi.get("href")
             return url
         else:
             return "N/A"
 
-    def get_product_data(self, ürün, link):
-        urun_adı = self.get_product_name(ürün)
-        puan = self.get_product_rating(ürün)
-        degerlendirme = self.get_product_reviews(ürün)
+    def get_product_data(self, urun, link):
+        urun_adı = self.get_product_name(urun)
+        puan = self.get_product_rating(urun)
+        degerlendirme = self.get_product_reviews(urun)
         fiyat = self.get_product_price(link)
         return [urun_adı, puan, degerlendirme, fiyat]
 
-    def get_product_name(self, ürün):
-        ürün_div = ürün.find("div", attrs={"class": "_cDEzb_p13n-sc-css-line-clamp-3_g3dy1"})
-        if ürün_div:
-            return ürün_div.text
+    def get_product_name(self, urun):
+        urun_div = urun.find("div", attrs={"class": "_cDEzb_p13n-sc-css-line-clamp-3_g3dy1"})
+        if urun_div:
+            return urun_div.text
         else:
             return "N/A"
 
-    def get_product_rating(self, ürün):
-        p_ürün = ürün.find('div', class_='a-icon-row')
-        if p_ürün:
-            puan = p_ürün.find('span', class_='a-icon-alt').text.strip()
+    def get_product_rating(self, urun):
+        p_urun = urun.find('div', class_='a-icon-row')
+        if p_urun:
+            puan = p_urun.find('span', class_='a-icon-alt').text.strip()
             return puan
         else:
             return "N/A"
 
-    def get_product_reviews(self, ürün):
-        urun_d = ürün.find("span", attrs={"class": "a-size-small"})
+    def get_product_reviews(self, urun):
+        urun_d = urun.find("span", attrs={"class": "a-size-small"})
         if urun_d:
             return urun_d.text.strip()
         else:
