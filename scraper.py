@@ -74,7 +74,7 @@ for url in tqdm(categorys, desc="TOPLAM SAYFA"):
                 else:
                     return "N/A"
 
-            def links(ürün):
+            def linkler(ürün):
                 link_etiketi = ürün.a
                 if link_etiketi:
                     url = "https://www.amazon.com.tr" + link_etiketi.get("href")
@@ -82,8 +82,8 @@ for url in tqdm(categorys, desc="TOPLAM SAYFA"):
                 else:
                     return "N/A"
                 
-            def fiyats(link):
-                while True:  # Sonsuz bir döngü oluşturduk
+            def fiyatlar(link):
+                while True:  
                     detay = rq.get(link, headers=HEADER)
                     detay_soup = bs(detay.content, "lxml")
                     fiyat_element = detay_soup.find("span", attrs={"class": "a-offscreen"})
@@ -95,11 +95,11 @@ for url in tqdm(categorys, desc="TOPLAM SAYFA"):
                         time.sleep(2)  # Fiyat bulunamadı, 2 saniye bekle ve tekrar dene
 
             for ürün in ürünler:
-                link = links(ürün)
+                link = linkler(ürün)
                 urunler_dict[link] = [isimler(ürün), 
                                       puanlar(ürün), 
                                       degerlendirmeler(ürün),
-                                      fiyats(link)]
+                                      fiyatlar(link)]
                 #print(urunler_dict) # sözlüklerin yazılmasını kontrol etmek için yorum satırından alabilirsiniz.
 
             time.sleep(retry_delay)
