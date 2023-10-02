@@ -7,7 +7,6 @@ cursor = conn.cursor()
 
 def create_table():
     cursor.execute('''CREATE TABLE IF NOT EXISTS urunler (
-                        id INTEGER PRIMARY KEY,
                         Link VARCHAR,
                         Urun_adi VARCHAR,
                         Puan FLOAT64,
@@ -16,12 +15,12 @@ def create_table():
                     )''')
 
 def read_csv(): 
-    with open("data/shaped_data.csv", "r") as csv_file:
+    with open("data/shaped_data.csv", "r") as csv_file: # kendi dosya yolunuzu yazın
         csv_reader = csv.reader(csv_file)
         next(csv_reader)  # Başlık satırını atla (varsa)
         for row in csv_reader:
             cursor.execute("INSERT INTO urunler (Link, Urun_adi, Puan, Degerlendirme, Fiyatlar) VALUES (?, ?, ?, ?, ?)",
-                        (row[1], row[2], row[3], row[4], row[5]))  # Fiyatlar sütununu ekledik
+                        (row[0] ,row[1], row[2], row[3], row[4])) 
 
 def run_query(sql):
     try:
