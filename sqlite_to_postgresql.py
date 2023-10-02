@@ -15,11 +15,12 @@ pg_cursor = pg_conn.cursor()
 
 pg_cursor.execute('''
     CREATE TABLE IF NOT EXISTS all_products (
-        Link VARCHAR,
-        Urun_adi VARCHAR,
-        Puan REAL,
-        Degerlendirme INTEGER,
-        Fiyatlar REAL
+        id SERIAL PRIMARY KEY,
+        Link text,
+        Urun_adi text,
+        Puan float,
+        Degerlendirme int,
+        Fiyatlar float
     )
 ''')
 
@@ -30,7 +31,7 @@ for row in rows:
     # Boş dizeleri kontrol edin ve boşlukları None ile değiştirin
     row = [None if value == '' else value for value in row]
     
-    pg_cursor.execute('INSERT INTO amazon_products_scraping (Link, Urun_adi, Puan, Degerlendirme, Fiyatlar) VALUES (%s, %s, %s, %s, %s)', (row[1], row[2], float(row[3]) if row[3] is not None else None, row[4] if row[4] is not None else None, float(row[5]) if row[5] is not None else None))
+    pg_cursor.execute('INSERT INTO all_products (id, Link, Urun_adi, Puan, Degerlendirme, Fiyatlar) VALUES (%s, %s, %s, %s, %s, %s)', (row[0] ,row[1], row[2], row[3], row[4], row[5]))
 
 pg_conn.commit()
 
